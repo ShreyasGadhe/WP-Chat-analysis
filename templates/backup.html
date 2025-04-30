@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>WhatsApp Sentiment Analyzer</title>
+    <title>WhatsApp Negativity Analyzer</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='styles.css') }}"
@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>WhatsApp Group Sentiment Analysis</h1>
+      <h1>WhatsApp Group Negativity Analyzer</h1>
       <input type="file" id="chatFile" accept=".txt" />
       <button onclick="analyzeChat()">Analyze Chat</button>
       <div id="results"></div>
@@ -32,15 +32,14 @@
               return;
             }
 
-            let html = "<h2>Negativity Report</h2><table>";
+            let html = "<h2>Negativity Ranking:</h2><table>";
             html +=
-              "<tr><th>User</th><th>Total Messages</th><th>Negative Messages</th><th>Avg. Sentiment</th></tr>";
+              "<tr><th>User</th><th>Negative Messages</th><th>Avg. Sentiment</th></tr>";
 
             data.users.forEach((user) => {
               html += `<tr>
                         <td>${user.user}</td>
-                        <td>${user.total_messages}</td>
-                        <td>${user.negative_messages}</td>
+                        <td>${user.negative_score}</td>
                         <td>${user.avg_sentiment.toFixed(2)}</td>
                     </tr>`;
             });

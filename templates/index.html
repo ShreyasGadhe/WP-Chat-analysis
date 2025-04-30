@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WhatsApp Negativity Analyzer</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>WhatsApp Group Negativity Analyzer</h1>
+      <input type="file" id="chatFile" accept=".txt" />
+      <button onclick="analyzeChat()">Analyze Chat</button>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      function analyzeChat() {
+        const file = document.getElementById("chatFile").files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/analyze", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              alert(data.error);
+              return;
+            }
+
+            let html = "<h2>Negativity Ranking:</h2><table>";
+            html +=
+              "<tr><th>User</th><th>Negative Messages</th><th>Avg. Sentiment</th></tr>";
+
+            data.users.forEach((user) => {
+              html += `<tr>
+                        <td>${user.user}</td>
+                        <td>${user.negative_score}</td>
+                        <td>${user.avg_sentiment.toFixed(2)}</td>
+                    </tr>`;
+            });
+
+            html += "</table>";
+            document.getElementById("results").innerHTML = html;
+          });
+      }
+    </script>
+  </body>
+</html>
